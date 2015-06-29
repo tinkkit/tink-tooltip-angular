@@ -14,6 +14,7 @@
       },
       link: function(scope,elem,attrs) {
         scope.tinkTrigger = scope.tinkTrigger || 'click';
+        scope.tinkPlacement = scope.tinkPlacement || 'bottomg';
 
         scope.$watch('tinkTrigger',function(nTrigger,oTrigger){
           if(oTrigger !== nTrigger){
@@ -40,19 +41,7 @@
             
           }
         });
-
-        var divElemen = $('<div class="tinkWrapper"></div>');
-        $(elem).after(divElemen)
-        divElemen.append($(elem));
-        var toolTip = $($compile('<div class="popover arrow-top-left"><span class="arrow" ng-bind-html="tinkTooltip"></span><button ng-click="close($event)">close</button></div>')(scope));
-        toolTip.css('maxWidth','200px');
-        toolTip.css('margin-top','10px');
-        toolTip.css('position','absolute');
-
-        $(elem).css('position','relative');
-
-        toolTip.css('visibility','hidden');
-        $(divElemen).append(toolTip);
+        placeTooltip();
 
         function bindHover(){
           angular.element(elem).bind('mouseenter.tooltip',function(){
@@ -76,6 +65,32 @@
 
         function unbindClick(){
           angular.element(elem).unbind('click.tooltip');
+        }
+        var toolTip;
+        function placeTooltip(){
+          toolTip = $($compile('<div class="popover"><span class="arrow" ng-bind-html="tinkTooltip"></span><button ng-click="close($event)">close</button></div>')(scope));
+          var divElemen = $('<div class="tinkWrapper"></div>');
+          $(elem).after(divElemen);
+          //toolTip.css('position','absolute');
+
+          if(scope.tinkPlacement === 'bottom'){
+            divElemen.append($(elem));
+            $(divElemen).append(toolTip);
+            toolTip.addClass('arrow-top-left');
+            toolTip.css('margin-top','10px');
+          }else if(scope.tinkPlacement === 'right'){
+
+          }else if(scope.tinkPlacement === 'left'){
+
+          }else{
+            $(divElemen).append(toolTip);
+            $(divElemen).append(elem);
+            toolTip.addClass('arrow-bottom-left');
+            toolTip.css('margin-bottom','10px');
+          }
+
+          //toolTip.css('visibility','hidden');
+          
         }
 
         function showTooltip(){
