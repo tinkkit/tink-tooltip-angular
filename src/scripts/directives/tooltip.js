@@ -13,7 +13,7 @@
         tinkTrigger:'@'
       },
       link: function(scope,elem,attrs) {
-        scope.tinkTrigger = scope.tinkTrigger || 'hover';
+        scope.tinkTrigger = scope.tinkTrigger || 'click';
 
         scope.$watch('tinkTrigger',function(nTrigger,oTrigger){
           if(oTrigger !== nTrigger){
@@ -30,22 +30,29 @@
               bindClick();
             }
           }else{
-            unbindHover();
-            bindHover();
+            if(nTrigger === 'click'){
+              unbindClick();
+              bindClick();
+            }else{
+              unbindHover();
+              bindHover();
+            }
+            
           }
         });
 
-        var toolTip = $($compile('<div class="popover arrow-top-left"><span class="arrow" ng-bind-html="tinkTooltip"></span></div>')(scope));
-        toolTip.css('margin-top','calc('+($(elem).outerHeight(true)+10)+'px)');
-        toolTip.css('top','0px');
-
+        var divElemen = $('<div class="tinkWrapper"></div>');
+        $(elem).after(divElemen)
+        divElemen.append($(elem));
+        var toolTip = $($compile('<div class="popover arrow-top-left"><span class="arrow" ng-bind-html="tinkTooltip"></span><button ng-click="close($event)">close</button></div>')(scope));
         toolTip.css('maxWidth','200px');
+        toolTip.css('margin-top','10px');
         toolTip.css('position','absolute');
 
         $(elem).css('position','relative');
 
-        toolTip.css('visibility','');
-        $(elem).append(toolTip);
+        toolTip.css('visibility','hidden');
+        $(divElemen).append(toolTip);
 
         function bindHover(){
           angular.element(elem).bind('mouseenter.tooltip',function(){
@@ -76,11 +83,13 @@
         }
 
         function hideTooltip(){
-          //toolTip.css('visibility','hidden');
+          toolTip.css('visibility','hidden');
         }
 
-        scope.close = function(){
+        scope.close = function($event){
           hideTooltip();
+         $event.preventDefault(); 
+         $event.stopPropagation();
         }
 
       }
