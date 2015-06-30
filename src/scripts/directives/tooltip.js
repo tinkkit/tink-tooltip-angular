@@ -182,9 +182,9 @@
                   }else if(placement === 'bottom'){
                     top = element.position().top + element.outerHeight() + arrowHeight +spacing;
                   }else if(placement === 'right'){
-                    left = element.position().left + element.outerWidth(true)  + spacing;
+                    left = element.position().left + element.outerWidth(true) + arrowWidth + spacing;
                   }else if(placement === 'left'){
-                    left = element.position().left - el.outerWidth(true) - spacing;
+                    left = element.position().left - el.outerWidth(true) - arrowWidth - spacing;
                   }
 
                   if(align === 'right'){
