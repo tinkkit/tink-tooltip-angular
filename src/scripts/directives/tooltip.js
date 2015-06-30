@@ -28,8 +28,8 @@
           }));
       }
       var theTemplate = null;
-      if(attrs.tinkPopoverTemplate){
-        theTemplate = haalTemplateOp(attrs.tinkPopoverTemplate);
+      if(attrs.tinkTooltipTemplate){
+        theTemplate = haalTemplateOp(attrs.tinkTooltipTemplate);
       }
 
 
@@ -37,7 +37,7 @@
           post: function postLink( scope, element, attributes ) {
                 var placement = attributes.tinkPopoverPlace;
                 var align = attributes.tinkPopoverAlign;
-                var trigger = 'click';
+                var trigger = attributes.tinkTooltipTrigger || 'hover';
                 var spacing = 2;
 
 
@@ -75,7 +75,7 @@
                 return !!c;
               }
 
-              $(document).bind('click',function(e){
+              /*$(document).bind('click',function(e){
                 var clicked = $(e.target).parents('.popover').last();
                 if(isOpen && !childOf($(e.target).get(0),element.get(0)) && ($(e.target).get(0) !== element.get(0) || clicked.length > 0)){
                   if(isOpen.get(0) !== clicked.get(0) &&  $(e.target).get(0) !== isOpen.get(0)){
@@ -83,7 +83,7 @@
                   }
                 }
 
-              });
+              });*/
 
               function show (){
                 if(theTemplate !== null){
@@ -105,8 +105,11 @@
                       el.css('top',-100);
                       el.css('left',-10);
 
-                        calcPos(element,el,placement,align,spacing);
+                        calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
 
+                      if(trigger === 'click'){
+                        el.append($($compile('<button ng-click="close($event)">close</button>')(scope)))
+                      }
 
                       if(attributes.tinkPopoverGroup){
                         $rootScope.$broadcast('popover-open', { group: attributes.tinkPopoverGroup,el:el });
@@ -125,7 +128,7 @@
                   $timeout.cancel( timeoutResize);
                   timeoutResize = $timeout(function(){
                    // setPos(isOpen,placement,align,spacing);
-                    calcPos(element,isOpen,placement,align,spacing);
+                    calcPos(element,isOpen,attrs.tinkTooltipAlign,align,spacing);
                   },250);
                 }
               }, true);
@@ -135,7 +138,7 @@
                   $timeout.cancel( timeoutResize);
                   timeoutResize = $timeout(function(){
                    // setPos(isOpen,placement,align,spacing);
-                    calcPos(element,isOpen,placement,align,spacing);
+                    calcPos(element,isOpen,attrs.tinkTooltipAlign,align,spacing);
                   },450);
                 }
               }, true);
@@ -145,6 +148,12 @@
                   isOpen.remove();
                   isOpen = null;
                 }
+              }
+
+              scope.close = function(event){
+                hide();
+                event.preventDefault();
+                event.stopPropagation();
               }
 
                  //The function that will be called to position the tooltip;
@@ -173,9 +182,9 @@
                   }else if(placement === 'bottom'){
                     top = element.position().top + element.outerHeight() + arrowHeight +spacing;
                   }else if(placement === 'right'){
-                    left = element.position().left + element.outerWidth(true) + arrowWidth + spacing;
+                    left = element.position().left + element.outerWidth(true)  + spacing;
                   }else if(placement === 'left'){
-                    left = element.position().left - el.outerWidth(true)- arrowWidth - spacing;
+                    left = element.position().left - el.outerWidth(true) - spacing;
                   }
 
                   if(align === 'right'){
@@ -200,9 +209,10 @@
             }
 
             
-              function arrowCal(placement,align){
+              function arrowCal(align){
                   var arrowCss = 'arrow-';
-                  switch(placement){
+
+                  switch(align){
                     case 'left':
                       arrowCss = arrowCss + 'right';
                       break;
@@ -210,43 +220,43 @@
                       arrowCss = arrowCss + 'left';
                       break;
                     case 'top':
-                      arrowCss = arrowCss + 'bottom';
+                      arrowCss = arrowCss + 'bottom-left';
                       break;
                     case 'bottom':
-                      arrowCss = arrowCss + 'top';
+                      arrowCss = arrowCss + 'top-left';
                       break;
                   }
 
-                  switch(align){
-                    case 'center':
-                      break;
-                    case 'top':
-                    case 'bottom':
-                      if(placement === 'right' || placement === 'left'){
-                        arrowCss = arrowCss + '-' + align;
-                      }
-                      break;
-                    case 'left':
-                    case 'right':
-                      if(placement === 'top' || placement === 'bottom'){
-                        arrowCss = arrowCss + '-' + align;
-                      }
-                  }
                   scope.arrowPlacement = arrowCss;
                 }
               arrowCal(placement,align);
 
               //calculate the position
               function calcPos(element,el,place,align,spacing){
-                place = 'bottom';
-                align = 'center';
+                switch(place){
+                    case 'left':
+                      align = 'center';
+                      break;
+                    case 'right':
+                      align = 'center';
+                      break;
+                    case 'top':
+                      align = 'left';
+                      break;
+                    case 'bottom':
+                      align = 'left';
+                      break;
+                  }
                 function calcPostInside(){
                   var data = getPos(el,place,align,spacing);
                     el.css('top',data.top);
                     el.css('left',data.left);
-                    arrowCal(data.place,data.align);
+                    arrowCal(data.place);
                 }
-                calcPostInside();
+                $timeout(function(){
+                  calcPostInside();
+                },25)
+                
                 el.css('visibility','visible');
               }
 
