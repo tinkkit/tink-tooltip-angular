@@ -108,7 +108,7 @@
                         calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
 
                       if(trigger === 'click'){
-                        el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)))
+                        el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)));
                       }
 
                       if(attributes.tinkPopoverGroup){
@@ -255,7 +255,7 @@
                 }
                 $timeout(function(){
                   calcPostInside();
-                },25)
+                },25);
 
                 el.css('visibility','visible');
               }
