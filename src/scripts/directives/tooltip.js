@@ -63,7 +63,7 @@
                 }
 
               function popoverHtml(){
-                var html = '<div class="popover {{arrowPlacement}}">'+
+                var html = '<div class="tooltip {{arrowPlacement}}">'+
                             '<span class="arrow"></span>'+
                           '</div>';
                           return html;
@@ -108,7 +108,7 @@
                         calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
 
                       if(trigger === 'click'){
-                        el.append($($compile('<button ng-click="close($event)">close</button>')(scope)))
+                        el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)))
                       }
 
                       if(attributes.tinkPopoverGroup){
@@ -208,7 +208,7 @@
 
             }
 
-            
+
               function arrowCal(align){
                   var arrowCss = 'arrow-';
 
@@ -256,7 +256,7 @@
                 $timeout(function(){
                   calcPostInside();
                 },25)
-                
+
                 el.css('visibility','visible');
               }
 
