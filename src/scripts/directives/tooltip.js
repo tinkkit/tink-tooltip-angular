@@ -8,6 +8,10 @@
   module.directive( 'tinkTooltip', ['$q','$templateCache','$http','$compile','$timeout','$window','$rootScope',function ($q,$templateCache,$http,$compile,$timeout,$window,$rootScope) {
   return {
     restrict:'EA',
+    scope:{
+      tinkTooltip:'@',
+      tinkTooltipDisabled:'='
+    },
     compile: function compile( tElement, attrs ) {
       var fetchPromises = {};
       //to retrieve a template;
@@ -86,38 +90,60 @@
               });*/
 
               function show (){
-                if(theTemplate !== null){
-                  theTemplate.then(function(data){
-                    if(isOpen === null){
-                      var elContent = $($compile(data)(scope));
-                      var el =$($compile(popoverHtml())(scope));
-                      el.css('position','absolute');
-                      el.css('visibility','hidden');
-                      elContent.insertAfter(el.find('span'));
+                if(scope.tinkTooltipDisabled !== true || scope.tinkTooltipDisabled !== 'true'){
+                  if(theTemplate !== null){
+                    theTemplate.then(function(data){
+                      if(isOpen === null){
+                        var elContent = $($compile(data)(scope));
+                        var el =$($compile(popoverHtml())(scope));
+                        el.css('position','absolute');
+                        el.css('visibility','hidden');
+                        elContent.insertAfter(el.find('span'));
 
-                      // el.css('z-index','99999999999');
-                      if(placement === 'top'){
-                        element.before(el);
-                      }else{
-                        element.after(el);
+                        // el.css('z-index','99999999999');
+                        if(placement === 'top'){
+                          element.before(el);
+                        }else{
+                          element.after(el);
+                        }
+
+                        el.css('top',-100);
+                        el.css('left',-10);
+
+                          calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
+
+                        if(trigger === 'click'){
+                          el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)));
+                        }
+
+                        if(attributes.tinkPopoverGroup){
+                          $rootScope.$broadcast('popover-open', { group: attributes.tinkPopoverGroup,el:el });
+                        }
+
+                        isOpen = el;
                       }
+                    });
+                  }else{
+                    if(isOpen === null){
+                      var el =$($compile(popoverHtml())(scope));
+                        el.css('position','absolute');
+                        el.css('visibility','hidden');
+                        $('<span>{{tinkTooltip}}</span>').insertAfter(el.find('span'));
+                                      // el.css('z-index','99999999999');
+                        if(placement === 'top'){
+                          element.before(el);
+                        }else{
+                          element.after(el);
+                        }
 
-                      el.css('top',-100);
-                      el.css('left',-10);
+                        el.css('top',-100);
+                        el.css('left',-10);
 
                         calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
-
-                      if(trigger === 'click'){
-                        el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)));
-                      }
-
-                      if(attributes.tinkPopoverGroup){
-                        $rootScope.$broadcast('popover-open', { group: attributes.tinkPopoverGroup,el:el });
-                      }
-
-                      isOpen = el;
+                        el =$($compile(el)(scope));
+                        isOpen = el;
                     }
-                  });
+                  }
                 }
               }
 
