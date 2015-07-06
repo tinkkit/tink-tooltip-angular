@@ -116,7 +116,7 @@
               }
 
               function show (){
-                if(scope.tinkTooltipDisabled !== true || scope.tinkTooltipDisabled !== 'true'){
+                if(scope.tinkTooltipDisabled === false || scope.tinkTooltipDisabled === 'false' || scope.tinkTooltipDisabled === undefined || scope.tinkTooltipDisabled === null){
                   if(theTemplate !== null){
                     theTemplate.then(function(data){
                       if(isOpen === null){
