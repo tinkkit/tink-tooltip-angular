@@ -39,8 +39,8 @@
 
       return {
           post: function postLink( scope, element, attributes ) {
-                var placement = attributes.tinkPopoverPlace;
-                var align = attributes.tinkPopoverAlign;
+                var placement = attributes.tinkTooltipPlace;
+                var align = attributes.tinkTooltipAlign;
                 var trigger = attributes.tinkTooltipTrigger || 'hover';
                 var spacing = 2;
 
@@ -89,59 +89,43 @@
 
               });*/
 
+              function toon(data){
+                var elContent = $($compile(data)(scope));
+                var el = $($compile(popoverHtml())(scope));
+                el.css('position','absolute');
+                el.css('visibility','hidden');
+                elContent.insertAfter(el.find('span'));
+
+                if(align === 'top'){
+                  element.before(el);
+                }else{
+                  element.after(el);
+                }
+                el.css('top',element.position().top)
+                calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
+
+                if(trigger === 'click'){
+                  el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)));
+                }
+
+                if(attributes.tinkPopoverGroup){
+                  $rootScope.$broadcast('popover-open', { group: attributes.tinkPopoverGroup,el:el });
+                }
+
+                isOpen = el;
+              }
+
               function show (){
-                if(scope.tinkTooltipDisabled !== true || scope.tinkTooltipDisabled !== 'true'){
+                if(scope.tinkTooltipDisabled === false || scope.tinkTooltipDisabled === 'false' || scope.tinkTooltipDisabled === undefined || scope.tinkTooltipDisabled === null){
                   if(theTemplate !== null){
                     theTemplate.then(function(data){
                       if(isOpen === null){
-                        var elContent = $($compile(data)(scope));
-                        var el =$($compile(popoverHtml())(scope));
-                        el.css('position','absolute');
-                        el.css('visibility','hidden');
-                        elContent.insertAfter(el.find('span'));
-
-                        // el.css('z-index','99999999999');
-                        if(placement === 'top'){
-                          element.before(el);
-                        }else{
-                          element.after(el);
-                        }
-
-                        el.css('top',-100);
-                        el.css('left',-10);
-
-                          calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
-
-                        if(trigger === 'click'){
-                          el.append($($compile('<a href="#" class="close" ng-click="close($event)">Sluiten</a>')(scope)));
-                        }
-
-                        if(attributes.tinkPopoverGroup){
-                          $rootScope.$broadcast('popover-open', { group: attributes.tinkPopoverGroup,el:el });
-                        }
-
-                        isOpen = el;
+                        toon(data);
                       }
                     });
                   }else{
                     if(isOpen === null){
-                      var el =$($compile(popoverHtml())(scope));
-                        el.css('position','absolute');
-                        el.css('visibility','hidden');
-                        $('<span>{{tinkTooltip}}</span>').insertAfter(el.find('span'));
-                                      // el.css('z-index','99999999999');
-                        if(placement === 'top'){
-                          element.before(el);
-                        }else{
-                          element.after(el);
-                        }
-
-                        el.css('top',-100);
-                        el.css('left',-10);
-
-                        calcPos(element,el,attrs.tinkTooltipAlign,align,spacing);
-                        el =$($compile(el)(scope));
-                        isOpen = el;
+                      toon($('<span>{{tinkTooltip}}</span>'));
                     }
                   }
                 }
@@ -281,9 +265,10 @@
                 }
                 $timeout(function(){
                   calcPostInside();
+                  el.css('visibility','visible');
                 },25);
 
-                el.css('visibility','visible');
+                
               }
 
           }
