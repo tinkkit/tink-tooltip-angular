@@ -34,7 +34,7 @@ describe('tink-interactive-table-angular', function() {
     },
     'hover': {
       scope: {},
-      element: '<button tink-tooltip="hier is content jippie" tink-tooltip-align="right">Open tooltip</button>'
+      element: '<button tink-tooltip-disabled="disable" tink-tooltip="hier is content jippie" tink-tooltip-align="right">Open tooltip</button>'
     },
     'template': {
       scope: {},
