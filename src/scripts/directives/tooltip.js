@@ -33,6 +33,13 @@
           }));
       }
 
+      /* popover html*/
+      ctrl.popoverHtml = function(){
+        return '<div class="tooltip {{arrowPlacement}}">'+
+                    '<span class="arrow"></span>'+
+                  '</div>';
+      }
+
     },
    controllerAs:'ctrl', 
     compile: function compile( tElement, attrs ) {
@@ -72,12 +79,7 @@
                    });
                 }
 
-              function popoverHtml(){
-                var html = '<div class="tooltip {{arrowPlacement}}">'+
-                            '<span class="arrow"></span>'+
-                          '</div>';
-                          return html;
-              }
+              
 
               function childOf(c,p){ //returns boolean
                 while((c=c.parentNode)&&c!==p){
@@ -88,7 +90,7 @@
 
               function toon(data){
                 var elContent = $($compile(data)(scope));
-                var el = $($compile(popoverHtml())(scope));
+                var el = $($compile(controller.popoverHtml())(scope));
                 el.css('position','absolute');
                 el.css('visibility','hidden');
                 elContent.insertAfter(el.find('span'));
