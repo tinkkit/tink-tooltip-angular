@@ -11,11 +11,12 @@
     scope:{
       tinkTooltip:'@',
       tinkTooltipDisabled:'='
-    },
-    compile: function compile( tElement, attrs ) {
-      var fetchPromises = {};
-      //to retrieve a template;
-      function haalTemplateOp(template) {
+    },controller:function(){
+
+      var ctrl = this;
+
+      var fetchPromises = {};  
+      ctrl.haalTemplateOp = function(template) {
         // --- if the template already is in our app cache return it. //
         if (fetchPromises[template]){
           return fetchPromises[template];
@@ -31,21 +32,26 @@
             return res;
           }));
       }
-      var theTemplate = null;
-      if(attrs.tinkTooltipTemplate){
-        theTemplate = haalTemplateOp(attrs.tinkTooltipTemplate);
-      }
 
-
+    },
+   controllerAs:'ctrl', 
+    compile: function compile( tElement, attrs ) {
       return {
-          post: function postLink( scope, element, attributes ) {
+          post: function postLink( scope, element, attributes,controller) {
+              /*basic variables */
                 var placement = attributes.tinkTooltipPlace;
                 var align = attributes.tinkTooltipAlign;
                 var trigger = attributes.tinkTooltipTrigger || 'hover';
                 var spacing = 2;
-
-
                 var isOpen = null;
+
+              /* get template if there is one */     
+                var theTemplate = null;
+                if(attributes.tinkTooltipTemplate){
+                  theTemplate = controller.haalTemplateOp(attributes.tinkTooltipTemplate);
+                }
+
+                /* see wich trigger we are goind to use */    
                 if(trigger === 'click'){
                   element.bind('click',function(){
                     scope.$apply(function(){
@@ -79,15 +85,6 @@
                 return !!c;
               }
 
-              /*$(document).bind('click',function(e){
-                var clicked = $(e.target).parents('.popover').last();
-                if(isOpen && !childOf($(e.target).get(0),element.get(0)) && ($(e.target).get(0) !== element.get(0) || clicked.length > 0)){
-                  if(isOpen.get(0) !== clicked.get(0) &&  $(e.target).get(0) !== isOpen.get(0)){
-                    hide();
-                  }
-                }
-
-              });*/
 
               function toon(data){
                 var elContent = $($compile(data)(scope));
