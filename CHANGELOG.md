@@ -14,6 +14,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Security
 -->
 
+## [2.0.4] - 2015-07-29
+
+### Changed
+- Changed the angular version to 1.4.3
+
 ## [2.0.3] - 2015-07-03
 
 ### Changed
