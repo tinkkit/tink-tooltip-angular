@@ -10,13 +10,16 @@
   <link rel="stylesheet" href="bower_components/tink-core/dist/tink.css" />
   <!-- endbower -->
 </head>
-<body>
+<body ng-controller="ctrl">
 
 <div class="container margin-top">
   <div class="row margin-top">
-    <button tink-tooltip="dd" tink-tooltip-trigger="click" tink-tooltip-align="bottom">Open tooltip</button>
+    <button tink-tooltip="dd" ng-click="go()" tink-tooltip-trigger="hover" ng-disabled="num > 5" tink-tooltip-align="bottom">Open tooltip</button>
   </div>
 </div>
+
+<button ng-click="go()"> change</button>
+
 
 
 
@@ -32,5 +35,20 @@
 <!-- endbower -->
 
 <script src="scripts/directives/tooltip.js"></script>
+<script>
+var module;
+  try {
+    module = angular.module('tink.tooltip');
+  } catch (e) {
+    module = angular.module('tink.tooltip', []);
+  }
+  module.controller('ctrl',function($scope){
+    $scope.num = 4;
+    $scope.go = function(){
+      $scope.dis = !$scope.dis;
+      $scope.num = 6;
+    }
+  });
+</script>
 </body>
 </html>
