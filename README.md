@@ -1,6 +1,6 @@
 # Tink tooltip Angular directive
 
-v2.0.5
+v2.0.6
 
 ## What is this repository for?
 

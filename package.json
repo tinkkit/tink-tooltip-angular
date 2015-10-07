@@ -1,7 +1,7 @@
 {
   "name": "tink-tooltip-angular",
   "description": "Tink tooltip Angular directive",
-  "version": "2.0.5",
+  "version": "2.0.6",
   "repository": {
     "type": "git",
     "url": "git@github.com:tinkkit/tink-tooltip-angular.git"

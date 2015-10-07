@@ -58,6 +58,12 @@
                   theTemplate = controller.haalTemplateOp(attributes.tinkTooltipTemplate);
                 }
 
+                scope.$parent.$watch(attributes.ngDisabled, function(newVal){
+                    if(true){
+                      hide();
+                    }
+                });
+
                 /* see wich trigger we are goind to use */    
                 if(trigger === 'click'){
                   element.bind('click',function(){
@@ -79,7 +85,7 @@
                    });
                 }
 
-              
+                           
 
               function childOf(c,p){ //returns boolean
                 while((c=c.parentNode)&&c!==p){
