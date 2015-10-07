@@ -14,17 +14,24 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Security
 -->
 
-## [2.0.5] - 2015-10-07
+## [2.0.6] - 2015-10-07
 
 ### Fixed
 - Fixed an issue where the tooltip would stay visible when an action button was disabled
 
 
 
-## [2.0.4] - 2015-07-29
+## [2.0.5] - 2015-10-07
 
 ### Changed
 - Changed the angular version to 1.4.3
+
+
+
+## [2.0.4] - 2015-07-29
+
+### Fixed
+- Fixed a minor bug
 
 
 
