@@ -58,6 +58,12 @@
                   theTemplate = controller.haalTemplateOp(attributes.tinkTooltipTemplate);
                 }
 
+                scope.$parent.$watch(attributes.ngDisabled, function(newVal){
+                    if(true){
+                      hide();
+                    }
+                });
+
                 /* see wich trigger we are goind to use */    
                 if(trigger === 'click'){
                   element.bind('click',function(){
@@ -79,7 +85,7 @@
                    });
                 }
 
-              
+                           
 
               function childOf(c,p){ //returns boolean
                 while((c=c.parentNode)&&c!==p){
@@ -132,25 +138,30 @@
 
               var timeoutResize = null;
 
-              $window.addEventListener('resize', function() {
-                if(isOpen!== null){
-                  $timeout.cancel( timeoutResize);
-                  timeoutResize = $timeout(function(){
-                   // setPos(isOpen,placement,align,spacing);
-                    calcPos(element,isOpen,attrs.tinkTooltipAlign,align,spacing);
-                  },250);
-                }
-              }, true);
+              var onresizefunc = function() {
+                  if (isOpen !== null) {
+                      $timeout.cancel(timeoutResize);
+                      timeoutResize = $timeout(function() {
+                          // setPos(isOpen,placement,align,spacing);
+                          calcPos(element, isOpen, attrs.tinkTooltipAlign, align, spacing);
+                      }, 250);
+                  }
+              };
 
-              $window.addEventListener('scroll', function() {
-                if(isOpen!== null){
-                  $timeout.cancel( timeoutResize);
-                  timeoutResize = $timeout(function(){
-                   // setPos(isOpen,placement,align,spacing);
-                    calcPos(element,isOpen,attrs.tinkTooltipAlign,align,spacing);
-                  },450);
-                }
-              }, true);
+              $window.addEventListener('resize',onresizefunc , true);
+
+
+              var onscrollfunc = function() {
+                  if (isOpen !== null) {
+                      $timeout.cancel(timeoutResize);
+                      timeoutResize = $timeout(function() {
+                          // setPos(isOpen,placement,align,spacing);
+                          calcPos(element, isOpen, attrs.tinkTooltipAlign, align, spacing);
+                      }, 450);
+                  }
+              };
+
+              $window.addEventListener('scroll', onscrollfunc, true);
 
               function hide(){
                 if(isOpen !== null){
@@ -270,8 +281,20 @@
                 
               }
 
+              scope.$on('$destroy', function () {
+                  element.off('click');
+                  element.off('mouseenter');
+                  element.off('mouseleave');
+                  $(document).off('click');
+                  $window.removeEventListener('resize', onresizefunc);
+                  $window.removeEventListener('scroll', onscrollfunc);
+
+              });
+
           }
       };
+
+
     }
   };
 
