@@ -284,11 +284,9 @@
               scope.$on('$destroy', function () {
                   element.off('click');
                   element.off('mouseenter');
-                  element.off('mouseleave');
-                  $(document).off('click');
+                  element.off('mouseleave');                 
                   $window.removeEventListener('resize', onresizefunc);
                   $window.removeEventListener('scroll', onscrollfunc);
-
               });
 
           }
