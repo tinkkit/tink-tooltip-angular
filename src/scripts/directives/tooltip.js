@@ -264,13 +264,15 @@
                   }
                 function calcPostInside(){
                   var data = getPos(el,place,align,spacing);
-                    el.css('top',data.top);
-                    el.css('left',data.left);
-                    arrowCal(data.place);
+                  el.css('top',data.top);
+                  el.css('left',data.left);
+                  arrowCal(data.place);
                 }
                 $timeout(function(){
-                  calcPostInside();
-                  el.css('visibility','visible');
+                  if (el != null) {
+                    calcPostInside();
+                    el.css('visibility','visible'); 
+                  }
                 },25);
 
                 

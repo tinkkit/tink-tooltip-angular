@@ -269,8 +269,10 @@
                     arrowCal(data.place);
                 }
                 $timeout(function(){
-                  calcPostInside();
-                  el.css('visibility','visible');
+                  if (el != null) {
+                    calcPostInside();
+                    el.css('visibility','visible'); 
+                  }
                 },25);
 
                 
